@@ -31,7 +31,7 @@ class UserFixture extends Fixture
             $user,
             'a123456789'
         ));
-
+        $manager->persist($user);
         $manager->flush();
     }
 }

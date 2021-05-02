@@ -121,6 +121,9 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.2.0"
     },
+    "melipayamak/php": {
+        "version": "1.0.0"
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },

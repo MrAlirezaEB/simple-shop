@@ -1,0 +1,232 @@
+/*================  form > submit ================*/
+form{
+  input[type=submit] {
+    padding: 10px 25px;
+    text-align: center;
+    color: white;
+    background-color: #b2e989;
+    border-radius: 10px;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    &:hover{
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
+      background-color: $green;
+    }
+  }
+}
+/*================ textarea ==================*/
+textarea {
+  width: 100%;
+  height: 150px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 1px 1px #bcdddd;
+  font-size: .875rem;
+  text-align: right;
+  padding: 15px;
+  color: $green-blue-dark;
+  font-weight: lighter;
+  border: none;
+
+  &:focus, &:hover {
+    box-shadow: 0 1px 1px $green;
+  }
+}
+/*================ red-radio ============*/
+.container-radio {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size:0.6875rem;
+  margin: 0 10px 5px 10px;
+  padding-right: 20px;
+  font-weight: normal;
+}
+.container-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.radio-check {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 15px;
+  width: 15px;
+  background-color: white;
+  border-radius: 50%;
+  border: 1px solid $green-gray-medium;
+}
+.container-radio:hover input ~ .radio-check {
+  background-color: white;
+}
+.container-radio input:checked ~ .radio-check {
+  background-color: white;
+}
+.radio-check:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+.container-radio input:checked ~ .radio-check:after {
+  display: block;
+}
+.container-radio .radio-check:after {
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $red-tomato;
+}
+/*================ green-radio ============*/
+.green-radio{
+  .choose-radio{
+    color: $green-blue-dark;
+    border-radius: 10px;
+    font-weight: lighter;
+    h5{
+      margin-bottom: 0;
+    }
+  }
+  .container-radio {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 0.75rem;
+  }
+  .radio-items{
+    display: flex;
+    align-items: center;
+  }
+  .radio-items label{
+    color: #538180;
+    margin-right: 10px;
+  }
+  .container-radio input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .radio-check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 17px;
+    width: 17px;
+    background-color: white;
+    border-radius: 50%;
+    border: 1px solid #cce3e5;
+    transform: translateY(2px);
+  }
+  .container-radio:hover input ~ .radio-check {
+    background-color: white;
+  }
+  .container-radio input:checked ~ .radio-check {
+    background-color: #ffffff;
+  }
+  .radio-check:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  .container-radio input:checked ~ .radio-check:after {
+    display: block;
+  }
+  .container-radio .radio-check:after {
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #cce3e5;
+  }
+}
+/*================ select ============*/
+.select{
+    width: 100%;
+    margin-bottom: 55px;
+    .subject-select{
+      svg{
+        height: 20px;
+        width: 20px;
+        color: #bbdcdc;
+        margin-left: 5px;
+      }
+      span{
+        font-size: 0.90625rem;
+        color: $red-tomato;
+      }
+    }
+    .select{
+      position: relative;
+      margin-top: 10px;
+    }
+    .box {
+      position: absolute;
+      top: 100%;
+      right:0;
+      width:100%;
+      height: 35px;
+      border-radius: 10px;
+    }
+    .box select {
+      font-family: iransansdn;
+      background-color: white;
+      border: 1px solid #bbdcdc;
+      color: $green-blue-dark;
+      padding: 5px 10px;
+      width: 100%;
+      font-size: .875rem;
+      -webkit-appearance: button;
+      outline: none;
+      height: 35px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .box::before {
+      content: "\f0d7";
+      font-family: FontAwesome;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width:35px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 35px;
+      color:#bbdcdc;
+      pointer-events: none;
+      height: 45px;
+      transition: .3s;
+    }
+    .box:hover::before {
+      color: $green-blue-dark;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .box:hover select {
+      border: 1px solid $green-blue-dark;
+
+    }
+    .box select option {
+      padding: 30px;
+      background-color: $green-gray-light;
+      font-family: iransansdn !important;
+      color: $green-blue-dark;
+    }
+  }
+
