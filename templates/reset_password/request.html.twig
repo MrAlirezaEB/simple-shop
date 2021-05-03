@@ -1,22 +1,47 @@
-{% extends 'base.html.twig' %}
+{% extends "security/base.html.twig" %}
 
-{% block title %}Reset your password{% endblock %}
+{% block content %}
+    <main class="login">
+    <div class="container">
+        <div class="login-page">
+            <div class="logo">
+                <a href="{{ path('home') }}"><img {% if (setting.getSetting('logo') !='') %}
+                    src="{{ asset(settings.getSetting('logo')) }}"
+                    {% else %}
+                    src="{{ asset('images/logo.png')}}"
+                {% endif %}></a>
+            </div>
+            <div class="login-box">
+                <form action="{{ path('app_forgot_password_request') }}" class="form-login" method="POST">
+                    {{ form_row(form._token) }}
+                    <div class="log-top">
+                        <div class="head-login">
+                            <h4>فراموشی رمز عبور </h4>
+                        </div>
+                        {% for flashError in app.flashes('reset_password_error') %}
+                            <div class="alert alert-danger" role="alert"></div>
+                            <p style="width:100% ; padding:5px; text-align:center; background:tomato; border-radius:5px; color:white;">
+                            {{ flashError }}
+                            </p>
+                        {% endfor %}
+                        <div class="form-item">
+                            <label for="email-phone">
+                                شماره موبایل
+                            </label>
+                            {{ form_widget(form.mobile) }}
+                        </div>
 
-{% block body %}
-    {% for flashError in app.flashes('reset_password_error') %}
-        <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-    {% endfor %}
-    <h1>Reset your password</h1>
-
-    {{ form_start(requestForm) }}
-        {{ form_row(requestForm.mobile) }}
-        <div>
-            <small>
-                Enter your email address and we we will send you a
-                link to reset your password.
-            </small>
+                        <div class="bottom-login flex">
+                            <input type="submit" value="ارسال">
+                        </div>
+                    </div>
+                    <div class="sign-up">
+                        <span>کاربر جدید هستید؟</span>
+                        <a href="{{ path('app_register') }}"> ثبت‌ نام در وبسایت</a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <button class="btn btn-primary">Send password reset email</button>
-    {{ form_end(requestForm) }}
+    </div>
+</main>
 {% endblock %}

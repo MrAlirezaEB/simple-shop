@@ -74,7 +74,7 @@ class RegistrationFormType extends AbstractType
                         'message' => 'لطفا یک رمز عبور وارد کنید',
                     ]),
                     new Length([
-                        'min' => 6,
+                        'min' => 10,
                         'minMessage' => 'رمز عبور شما باید حد اقل شامل {{ limit }} کاراکنر بزرگ و کوچک باشد',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,

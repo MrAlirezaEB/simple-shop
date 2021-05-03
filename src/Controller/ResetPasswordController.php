@@ -40,14 +40,14 @@ class ResetPasswordController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->processSendingPasswordResetEmail(
+            return $this->processSendingPasswordResetMobile(
                 $form->get('mobile')->getData(),
-                $mailer
             );
         }
 
         return $this->render('reset_password/request.html.twig', [
-            'requestForm' => $form->createView(),
+            'form' => $form->createView(),
+            'title'=>'فراموشی رمز عبور'
         ]);
     }
 
@@ -55,7 +55,7 @@ class ResetPasswordController extends AbstractController
      * Confirmation page after a user has requested a password reset.
      */
     #[Route('/check-mobile', name: 'app_check_mobile')]
-    public function checkEmail(): Response
+    public function checkMobile(): Response
     {
         // We prevent users from directly accessing this page
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
@@ -108,7 +108,7 @@ class ResetPasswordController extends AbstractController
             // Encode the plain password, and set it.
             $encodedPassword = $passwordEncoder->encodePassword(
                 $user,
-                $form->get('plainPassword')->getData()
+                $form->get('password')->getData()
             );
 
             $user->setPassword($encodedPassword);
@@ -125,10 +125,10 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
+    private function processSendingPasswordResetMobile(string $mobile): RedirectResponse
     {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy([
-            'mobile' => $emailFormData,
+            'mobile' => $mobile,
         ]);
 
         // Do not reveal whether a user account was found or not.
@@ -153,7 +153,7 @@ class ResetPasswordController extends AbstractController
 
         $sms = new Sms();
         $sms->send($user->getMobile() , "لینک تغییر پسورد : ".$this->generateUrl('app_reset_password', [
-            'token' => $resetToken->token,
+            'token' => $resetToken->token(),
         ]));
 
         // Store the token object in session for retrieval in check-email route.
