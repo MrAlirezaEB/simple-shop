@@ -7,11 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
+ * @UniqueEntity(fields={"mobile"}, message="There is already an account with this mobile")
  */
 class User implements UserInterface
 {
@@ -79,6 +81,11 @@ class User implements UserInterface
       * @ORM\OneToMany(targetEntity=Order::class, mappedBy="user", orphanRemoval=true)
       */
      private $orders;
+
+     /**
+      * @ORM\Column(type="boolean")
+      */
+     private $isVerified = true;
 
      public function __construct()
      {
@@ -300,6 +307,18 @@ class User implements UserInterface
                 $order->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

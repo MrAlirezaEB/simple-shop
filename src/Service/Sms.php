@@ -23,12 +23,14 @@ class Sms
     public function send(string $to , string $text) : array
     {
         $from = '50004000403103';
-        try{
+        try
+        {
             $response = $this->sender->send($to,$from,$text);
             $array = json_decode($response , true);
             return $array;
-        }catch(Exception $e){
-            echo $e->getMessage();
+        }
+        catch(Exception $e){
+            throw new Error($e->getMessage());
         }
     }
 }

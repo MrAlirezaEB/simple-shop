@@ -3183,7 +3183,12 @@ ul.social {
          }
        }
      }
-     input[type=text]{
+     ul{
+       color: tomato;
+       font-size: .6rem;
+       list-style:circle;
+     }
+     input[type=text] , input[type=email] , input[type=password]{
        height: 50px;
        width: 100%;
        border-radius: 10px;
@@ -3196,6 +3201,19 @@ ul.social {
        &:hover , &:focus{
          border: 1px solid $green;
        }
+     }
+     select{
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid #cde6e6;
+      background-color: #f6fafa;
+      color: #7d9d9c;
+      font-size: .75rem;
+      padding:0 20px;
+      transition: .3s;
+      &:hover , &:focus{
+        border: 1px solid $green;
+      }
      }
    }
 

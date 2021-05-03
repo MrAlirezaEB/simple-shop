@@ -1,0 +1,77 @@
+{% extends "security/base.html.twig" %}
+
+{% block content %}
+    <main class="login" style="height:auto; padding-bottom:60px; padding-top:60px">
+    <div class="container">
+        <div class="login-page">
+            <div class="logo">
+                <a href="{{ path('home') }}"><img {% if (setting.getSetting('logo') !='') %}
+                    src="{{ asset(settings.getSetting('logo')) }}"
+                    {% else %}
+                    src="{{ asset('images/logo.png')}}"
+                {% endif %}></a>
+            </div>
+            <div class="login-box">
+                <form action="{{ path('app_register') }}" class="form-login" method="POST">
+                    {{ form_row(form._token) }}
+                    <div class="log-top">
+                        <div class="head-login">
+                            <h4>ثبت نام در {{setting.getSetting('website_name')}}</h4>
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                نام و نام خانوادگی *
+                            </label>
+                            {{form_widget(form.fullname)}}
+                            {{form_errors(form.fullname)}}
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                شماره موبایل *
+                            </label>
+                            {{form_widget(form.mobile)}}
+                            {{form_errors(form.mobile)}}
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                ایمیل
+                            </label>
+                            {{form_widget(form.email)}}
+                            {{form_errors(form.email)}}
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                ایمیل
+                            </label>
+                            {{form_widget(form.birthday)}}
+                            {{form_errors(form.birthday)}}
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                کلمه عبور *
+                            </label>
+                            {{form_widget(form.password.first)}}
+                            {{form_errors(form.password.first)}}
+                        </div>
+                        <div class="form-item">
+                            <label for="email-phone">
+                                تایید کلمه عبور *
+                            </label>
+                            {{form_widget(form.password.second)}}
+                            {{form_errors(form.password.second)}}
+                        </div>
+                        <div class="bottom-login flex">
+                            <input type="submit" value="ثبت نام">
+                        </div>
+                    </div>
+                    <div class="sign-up">
+                        <span>قبلا عضو شده اید ؟</span>
+                        <a href="{{ path('app_login') }}"> ورود به وبسایت</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
