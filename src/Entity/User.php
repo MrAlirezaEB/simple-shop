@@ -259,6 +259,16 @@ class User implements UserInterface
         return $this->shoppingLists;
     }
 
+    /**
+     * this method returns shopping list that are not ordered yet
+     * @return Collection|ShoppingList[]
+     */
+    public function getPendingShoppingLists(): Collection
+    {
+        return $this->shoppingLists->filter(function(ShoppingList $item){
+            return !$item->getOrdr();
+        });
+    }
     public function addShoppingList(ShoppingList $shoppingList): self
     {
         if (!$this->shoppingLists->contains($shoppingList)) {

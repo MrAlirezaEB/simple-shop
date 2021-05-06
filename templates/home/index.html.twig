@@ -1,20 +1,80 @@
-{% extends 'base.html.twig' %}
+{% extends "base.html.twig" %}
 
-{% block title %}Hello HomeController!{% endblock %}
-
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/TheLasense/Documents/GitHub/simple-shop/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/TheLasense/Documents/GitHub/simple-shop/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+{% block content %}
+    <main class="home">
+    <div class="container">
+        <section class="product">
+            <div class="head-section flex justify-content-between">
+                <h3>محصولات پر بازدید</h3>
+                <a href="{{path('products',{orderBy:'views'})}}">مشاهده همه </a>
+            </div>
+            <div class="production pl-lg-3">    
+                <div class="row">
+                {% for item in most_view_products %}
+                    <div class="col-xl-3 col-md-6 col-sm-12 pl-0 mb-lg-3">
+                        <div class="product-box">
+                            <figure>
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}"><img src="{{ asset(item.image) }}"></a>
+                            </figure>
+                            <div class="pro-detail text-center">
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}">{{item.title}}</a>
+                                <div class="pro-info flex">
+                                    <span>شروع از 1 عدد</span>
+                                    /
+                                    <span>2 تا 10 روز کاری</span>
+                                </div>
+                                <div class="pro-button flex">
+                                    <span><span style="color:#e85d48; font-size: 1rem;margin: 0 2px; ">{{item.price}}</span>  تومان</span>
+                                    <a href="{{ path('order.addToCart' , { product : item.id | hashids_encode}) }}" style="background-color: #4d97ff"> اضافه به سبد
+                                        <svg>
+                                            <use xlink:href="{{asset('images/16box.svg#box')}}"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                
+            </div>
+        </section>
+        <section class="product">
+            <div class="head-section flex justify-content-between">
+                <h3>محصولات جدید</h3>
+                <a href="{{path('products',{orderBy:'createdAt'})}}">مشاهده همه </a>
+            </div>
+            <div class="production pl-lg-3">    
+                <div class="row">
+                {% for item in recent_products %}
+                    <div class="col-xl-3 col-md-6 col-sm-12 pl-0 mb-lg-3">
+                        <div class="product-box">
+                            <figure>
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}"><img src="{{ asset(item.image) }}"></a>
+                            </figure>
+                            <div class="pro-detail text-center">
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}">{{item.title}}</a>
+                                <div class="pro-info flex">
+                                    <span>شروع از 1 عدد</span>
+                                    /
+                                    <span>2 تا 10 روز کاری</span>
+                                </div>
+                                <div class="pro-button flex">
+                                    <span><span style="color:#e85d48; font-size: 1rem;margin: 0 2px; ">{{item.price}}</span>  تومان</span>
+                                    <a href="{{ path('order.addToCart' , { product : item.id | hashids_encode}) }}" style="background-color: #4d97ff"> اضافه به سبد
+                                        <svg>
+                                            <use xlink:href="{{asset('images/16box.svg#box')}}"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+                
+            </div>
+        </section>
+    </div>
+</main>
 {% endblock %}

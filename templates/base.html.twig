@@ -1,19 +1,238 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ setting.getSetting('website_name') }} - {{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('icon.png') }}">
+    <link rel="stylesheet" href="{{asset('css/hover.css')}}">
+    <link rel="stylesheet" href="{{asset('css/slick.css')}}">
+    <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/fontawesome.min.css')}}">
+    <link rel="stylesheet" href="{{asset('css/style.css')}}">
+    {% block extracss %}
+        
+    {% endblock %}
+</head>
+<body>
+  
+<header>
+    <div class="header container-fluid">
+        <div class="container">
+            <div class="top-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <ul class="menu-top flex">
+                            <li>
+                                <a href="{{ path('home') }}">صفحه اصلی</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <form class="search flex" action='{{path('search')}}' method='post'>
+                            <input type="text" name='q' placeholder="جستجو کنید... ">
+                            <button type='submit'><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-header flex flex-center-between">
+                <div class="bottom-header-right flex">
+                    <div class="logo">
+                        <a href="{{ path('home') }}"><img {% if (setting.getSetting('logo') !='') %}
+                            src="{{ asset(setting.getSetting('logo')) }}"
+                            {% else %}
+                            src="{{asset('images/logo.png')}}"
+                        {% endif %}></a>
+                    </div>
+                    <nav>
+                        <ul class="main-menu">
+                            <li>
+                                <a href="{{path('home')}}" {% if app.request.get('_route') == 'home' %}
+                                    class="active-menu"
+                                {% endif %}>
+                                    <svg>
+                                        <use xlink:href="{{asset('images/1rgb.svg#rgb')}}"></use>
+                                    </svg>
+                                    خانه
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{path('products')}}" {% if app.request.get('_route') == 'products' %}
+                                    class="active-menu"
+                                {% endif %}>
+                                    <svg>
+                                        <use xlink:href="{{asset('images/1rgb.svg#rgb')}}"></use>
+                                    </svg>
+                                     محصولات
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="bottom-header-left flex">
+                    {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <button type='button' class="user-out" data-toggle="modal" data-target=".bd-login-modal-lg">
+                        ورود به سایت
+                    </button>
+                    <div class="modal fade bd-login-modal-lg" tabindex="-1" role="dialog" aria-labelledby="login" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="write-idea-content">
+                                    <div class="top-idea flex">
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <svg><use xlink:href="images/12close.svg#close"></use></svg>
+                                        </button>
+                                        <h4>ورود به پنل کاربری</h4>
+                                    </div>
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+                                    <div class="login-page" style="height:auto; padding-bottom: 50px;">
+                                        <div class="login-box">
+                                            <form class="form-login" action='{{path('app_login')}}' method="POST">
+                                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                                                <div class="log-top">
+                                                    <div class="head-login">
+                                                        <h4>ورود به {{ setting.getSetting('website_name') }} </h4>
+                                                    </div>
+                                                    <div class="form-item">
+                                                        <label for="email-phone">
+                                                            شماره موبایل
+                                                        </label>
+                                                        <input type="text" name="mobile" placeholder="شماره موبایل خود را وارد کنید" required>
+                                                    </div>
+                                                    <div class="form-item">
+                                                        <label for="email-phone">
+                                                            کلمه عبور
+                                                            <a href="{{ path('app_forgot_password_request') }}">کلمه عبور خود را فراموش کرده‌ام</a>
+                                                        </label>
+                                                        <input type="password" name="password" placeholder="کلمه عبور خود را وارد کنید" required>
+                                                    </div>
+                                                    <div class="bottom-login flex">
+                                                        <div class="type type-radio">
+                                                            <div class="radio-items flex wrap">
+                                                                <label class="container-radio">
+                                                                    <span class="text-check">مرا به خاطر بسپار</span>
+                                                                    <input type="checkbox" name="_remember_me">
+                                                                    <span class="radio-check"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <input type="submit" value="ورود">
+                                                    </div>
+                                                </div>
+                                                <div class="sign-up">
+                                                    <span>کاربر جدید هستید؟</span>
+                                                    <a href="{{ path('app_register') }}"> ثبت‌ نام در وبسایت</a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% else %}
+                    <div class="user flex align-items-center">
+                        <div class="user-pic">
+                            <img src="{{asset('images/person.png')}}">
+                        </div>
+                        <div class="username">
+                            <span>{{app.user.getFullName()}}</span>
+                        </div>
+                        <div class="tringle-down"></div>
+                        <div class="user-log">
+                            <ul>
+                                <li>
+                                    <a href="{{path('user.dashboard')}}">
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17user.svg#user')}}"></use>
+                                        </svg>
+                                        پنل کاربری
+                                    </a>
+                                </li>
+                                {% if is_granted('ROLE_ADMIN') %}
+                                    <li>
+                                    <a href="{{path('admin.dashboard')}}">
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17user.svg#user')}}"></use>
+                                        </svg>
+                                        پنل مدیریت
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li>
+                                    <a href="{{path('user.orders')}}">
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17shopping-bag.svg#shop-bag')}}"></use>
+                                        </svg>
+                                        سفارشات
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('app_logout')}}">
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17logout.svg#logout')}}"></use>
+                                        </svg>
+                                        خارج شدن</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="basket flex align-items-center">
+                        <a href="{{path('order.shoppinglists')}}">سبد خرید</a>
+                        <div class="count-shop">
+                            {{app.user.getPendingShoppingLists()|length}}
+                        </div>
+                        <span class="basket-icon">
+                                <svg><use xlink:href="{{asset('images/1supermarket.svg#supermarket')}}"></use></svg>
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% block content %}
+    
+{% endblock %}
+<footer class="footer">
+    <div class="bottom-footer container-fluid">
+        <div class="container">
+            <div class="copyright flex">
+                <div class="bottom-footer-item flex">
+                    <div class="text-bottom-footer flex flex-column">
+                        <span>Designed & Developed by</span>
+                        <span><a href="http://idevs.ir" target="_blank" style="color:gold">Idevs.ir</a> 2019-2020</span>
+                    </div>
+                    <div class="logo">
+                        <a href="#"><img src="{{asset('images/logo.png')}}"></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+
+<!-- Return to Top -->
+<a href="#" id="return-to-top">
+    <svg>
+        <use xlink:href="{{asset('images/8up-arrow.svg#up')}}"></use>
+    </svg>
+</a>
+
+
+<script src="{{asset('js/jquery-3.3.1.min.js')}}"></script>
+<script src="{{asset('js/slick.min.js')}}"></script>
+<script src="{{asset('js/bootstrap.min.js')}}"></script>
+<script src="{{asset('js/inc.js')}}"></script>
+{% block extrajs %}
+    
+{% endblock %}
+</body>
 </html>

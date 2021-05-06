@@ -1,0 +1,468 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <main class="unit6">
+    <div class="page-name container-fluid">
+        <div class="container">
+            <ul class="flex">
+                <li><a href="{{path('home')}}">صحفه اصلی</a></li>
+                <li><a href="#">{{title}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="steps">
+            <div class="line-dashed"></div>
+            <div class="step-item grid">
+                <div class="stp-box flex">
+                    <!-- line-d display none , there is for responsive -->
+                    <div class="line-d"></div>
+                    <a href="#" class="content-step flex flex-column">
+                        <svg><use xlink:href="{{asset('images/10s-package.svg#package')}}"></use></svg>
+                        <div class="circle">
+                            <div class="circle-front">
+                            </div>
+                            <div class="circle-back">
+                                <div class="arrow-bottom-back"></div>
+                            </div>
+                        </div>
+                        <span> انتخاب محصول</span>
+                    </a>
+                </div>
+                <div class="stp-box flex active-step">
+                    <div class="line-d"></div>
+                    <a href="#" class="content-step flex flex-column">
+                        <svg><use xlink:href="{{asset('images/10s-box.svg#box')}}"></use></svg>
+                        <div class="circle">
+                            <div class="circle-front">
+                            </div>
+                            <div class="circle-back">
+                                <div class="arrow-bottom-back"></div>
+                            </div>
+                        </div>
+                        <span>تکمیل سفارش</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <form action="{{path('order.final')}}" method="post"> <!--  form -->
+            <div class="widget-shop">
+                <div class="single-shop">
+                    {% if shoppings.count()==0 %}
+                        <div class="row">
+                        <div class="col-lg-8">
+                            <div class="single-post pl-3">
+                                <div class="head-post">
+                                    <svg>
+                                        <use xlink:href="{{asset('images/6pin.svg#pin')}}"></use>
+                                    </svg>
+                                    <h4>سبد خرید خالی است ...</h4>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="single-post pl-3">
+                                <div class="head-post">
+                                    <svg>
+                                        <use xlink:href="{{asset('images/6pin.svg#pin')}}"></use>
+                                    </svg>
+                                    <h4>انتخاب آدرس تحویل سفارش</h4>
+                                </div>
+                                <div class="select-product">
+                                {% set addressflg = true %}
+                                {% set nodef = true %}
+                                {% set def_address = null %}
+                                {% for address in addresses %}
+                                    {% if address.getDef() %}
+                                        {% set def_address = address %}
+                                        {% set nodef = false %}
+                                        {% set addressflg = false %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if nodef and addresses.count() > 0 %}
+                                    {% set addressflg = false %}
+                                    {% set def_address = addresses[0] %}
+                                {% endif %}
+       
+                                    {% if addressflg %}
+                                    <div class="receiver">
+                                        <div class="receive-box">
+                                            <div class="receive-item">
+                                                <span>هنوز آدرسی وارد نکرده اید !</span>
+                                            </div>
+                                            <div class="receive-address">
+                                                <a href="#" class="receive-item" data-toggle="modal"
+                                                data-target=".new-address-modal">
+                                                    <div class="new-address">
+                                                        آدرس جدید
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="receiver">
+                                        <div class="receive-box">
+                                            <div class="receive-item">
+                                                <span>گیرنده:</span>
+                                                <figure class="user-pic">
+                                                    <img src="{{asset('images/person.png')}}">
+                                                </figure>
+                                                <span>{{app.user.fullname}}</span>
+                                            </div>
+                                            <div class="receive-address">
+                                                <a href="#" class="edit-address" data-toggle="modal"
+                                                data-target=".edit-address-modal" data-addressid='{{def_address.id}}'>
+                                                    تغییر این آدرس
+                                                </a>
+                                                <a href="#" class="receive-item" data-toggle="modal"
+                                                data-target=".new-address-modal">
+                                                    <div class="new-address">
+                                                        آدرس جدید
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <ul class="flex">
+                                            <li> کد پستی: {{def_address.postalcode}}</li>
+                                            <li> {{def_address.state ~ ' ، '}} {{def_address.city ~ ' ، '}} {{def_address.address}}</li>
+                                        </ul>
+                                        <input type="hidden" name='address_id' value='{{def_address.id}}' id='address_id'>
+                                    </div>    
+                                    {% endif %}
+                                    {% set file_attached = true %}
+                                    {% for item in shoppings %}
+                                    <div class="details">
+                                        <div class="row">
+                                            <div class="col-lg-4 pl-0">
+                                                <img src="{{asset(item.getProduct().getImage())}}">
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <h4>مرسوله: {{item.getProduct().getTitle()}}</h4>
+                                                <div class="manner-address flex align-items-center">
+                                                    <div class="manner">
+ 
+                                                        <div class="flex align-items-center" style="margin-bottom:3px">
+                                                            <svg style="height: 25px; width: 20px;">
+                                                                <use xlink:href="{{asset('images/14file.svg#file')}}"></use>
+                                                            </svg>
+                                                            <h5 style="font-size: .8rem">هزینه محاسبه شده :
+                                                                <span class="format">
+                                                                    {{(item.getProduct().getPrice()) | number_format(0, '', ',')}}
+                                                                </span>
+                                                                تومان
+                                                            </h5>
+                                                        </div>
+                                                        <div class="fields">
+                                                            <ul class="flex" style="width: 100%; flex-wrap: wrap;">
+
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>     
+                                    </div>
+                                    {% endfor %}
+                                    <div class="payment-factor">
+                                        <div class="next-factor">
+                                            <button type='submit' class="continue">
+                                                ثبت سفارش
+                                                <svg>
+                                                    <use xlink:href="{{asset('images/1supermarket.svg#supermarket')}}"></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="hold-factor">
+                                <div class="single-factor">
+                                    <div class="total-factor flex">
+                                        <h5>پرداخت نهایی :</h5>
+                                        <span class="total_price" style="font-size:1.2rem; font-weight:bold">{{totalPrice}} تومان</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    {% endif %}    
+                       
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+{% if shoppings.count()>0 %}   
+<div class="modal fade new-address-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="write-idea-content">
+                <div class="top-idea flex">
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <svg><use xlink:href="{{asset('images/12close.svg#close')}}"></use></svg>
+                    </button>
+                    <h4>آدرس ها</h4>
+                </div>
+
+                <div class="login-page" style="height: auto">
+                    <div class="login-box">
+                    {% set token = form_row(addressForm._token) %}
+                        <form action="{{ path('user.address.new') }}" class="form-login" method="POST">
+                             {{ token | raw }}
+                            <div class="log-top">
+                                <div class="head-login">
+                                    <h4>آدرس جدید </h4>
+                                </div>
+                                <div class="product-info">
+                                    <div class="select">
+                                        <div class="subject-select flex">
+                                            <span style="color:#1b4d4c; font-size:.75rem;">استان : </span>
+                                        </div>
+                                        <div class="select">
+                                            <div class="box">
+                                                {{ form_widget(addressForm.state) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="select">
+                                        <div class="subject-select flex">
+                                            <span style="color:#1b4d4c; font-size:.75rem;">شهر : </span>
+                                        </div>
+                                        <div class="select">
+                                            <div class="box">
+                                                {{ form_widget(addressForm.city) }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label for="email-phone">
+                                        کد پستی :
+                                    </label>
+                                    {{ form_widget(addressForm.postalcode) }}
+                                </div>
+                                <div class="form-item">
+                                    <label for="email-phone">
+                                        آدرس :
+                                    </label>
+                                    {{ form_widget(addressForm.address) }}
+                                </div>
+                                <div class="bottom-login flex">
+                                    <input type="submit" value="ثبت">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="login-page" style="height: auto">
+                    <div class="login-box">
+                        <div class="log-top">
+                            <div class="head-login">
+                                <h4>انتخاب از لیست </h4>
+                            </div>
+                            {% for address in addresses %}
+                            {% if address != def_address %}
+                            <a href="{{path('order.select.address' , { address: address.id | hashids_encode })}}" class="address-select">
+                                <div class="receiver" style="background-color: #cde6e6;">
+                                    <ul class="">
+                                        <li style="color:#7d9d9c"> کد پستی: {{address.postalcode}}</li>
+                                        <li style="color:#7d9d9c"> {{address.state ~ ' ، '}} {{address.city ~ ' ، '}} {{address.address}}</li>
+                                    </ul>
+                                </div>
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if def_address %}
+<div class="modal fade edit-address-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="write-idea-content">
+                <div class="top-idea flex">
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <svg><use xlink:href="{{asset('images/12close.svg#close')}}"></use></svg>
+                    </button>
+                    <h4>ویرایش آدرس</h4>
+                </div>
+
+                <div class="login-page" style="height: auto">
+                    <div class="login-box">
+                        <form action="{{ path('user.address.edit') }}" class="form-login" method="POST">
+                            <input type="hidden" name='address_id' value="{{def_address.id}}">
+                            {{ token | raw }}
+                            <div class="log-top">
+                                <div class="head-login">
+                                    <h4>اطلاعات آدرس </h4>
+                                </div>
+                                <div class="product-info">
+                                    <div class="select">
+                                        <div class="subject-select flex">
+                                            <span style="color:#1b4d4c; font-size:.75rem;">استان : </span>
+                                        </div>
+                                        <div class="select">
+                                            <div class="box">
+                                                <select name='state' id='state_selected' required>
+    
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="select">
+                                        <div class="subject-select flex">
+                                            <span style="color:#1b4d4c; font-size:.75rem;">شهر : </span>
+                                        </div>
+                                        <div class="select">
+                                            <div class="box">
+                                                <select name='city' id='city_selected' required>
+    
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-item">
+                                    <label for="email-phone">
+                                        کد پستی :
+                                    </label>
+                                    <input type="text" name="postalcode" placeholder="کد پستی خود را وارد کنید" value="{{def_address.postalcode}}" required>
+                                </div>
+                                <div class="form-item">
+                                    <label for="email-phone">
+                                        آدرس :
+                                    </label>
+                                    <input type="text" name="address" placeholder="آدرس خود را وارد کنید" value = "{{def_address.address}}" required>
+                                </div>
+                                <div class="bottom-login flex">
+                                    <input type="submit" value="تغییر">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}
+
+
+{% block extrajs %}
+{% set addressflg = true %}
+{% set nodef = true %}
+{% set def_address = null %}
+{% for address in addresses %}
+    {% if address.getDef() %}
+        {% set def_address = address %}
+        {% set nodef = false %}
+        {% set addressflg = false %}
+    {% endif %}
+{% endfor %}
+{% if nodef and addresses.count() > 0 %}
+    {% set addressflg = false %}
+    {% set def_address = addresses[0] %}
+{% endif %}
+<script src="{{asset('js/jquery.serializejson.min.js')}}"></script>
+<script src="{{asset('js/address.js')}}"></script>
+{% if shoppings.count() > 0 %}
+<script>
+$(document).ready(function(){
+    provinces.forEach(element => {
+        $('#address_state').append(' <option value="'+element.name+'">'+element.name+'</option>');
+        {%if def_address %}
+        let selected_state = "{{def_address.state}}";
+        if(element.name == selected_state)
+        {
+            $('#state_selected').append(' <option value="'+element.name+'" selected>'+element.name+'</option>');
+            element.cities.forEach(el => {
+                let selected_city = "{{def_address.city}}";
+                if(el == selected_city)
+                {
+                    $('#city_selected').append(' <option value="'+el+'" selected>'+el+'</option>');
+                }
+                else
+                {
+                    $('#city_selected').append(' <option value="'+el+'">'+el+'</option>');
+                }
+                
+            });
+        }
+        else
+        {
+            $('#state_selected').append(' <option value="'+element.name+'">'+element.name+'</option>');
+        }
+        {% endif %}
+        
+    });
+    provinces[0].cities.forEach(element => {
+        $('#address_city').append(' <option value="'+element+'">'+element+'</option>');
+    });
+
+    $('#address_state').change(function(){
+        let state = $(this).val();
+        provinces.forEach(el => {
+            if(state == el.name )
+            {
+                $('#address_city').html('');
+                el.cities.forEach(element => {
+                    $('#address_city').append(' <option value="'+element+'">'+element+'</option>');
+                });
+            }
+        });
+    });
+
+    $('#state_selected').change(function(){
+        let state = $(this).val();
+        provinces.forEach(el => {
+            if(state == el.name )
+            {
+                $('#city_selected').html('');
+                el.cities.forEach(element => {
+                    $('#city_selected').append(' <option value="'+element+'">'+element+'</option>');
+                });
+            }
+        });
+    });
+
+
+    $('.receiver .delete').click(function(){
+        let formdata = new FormData();
+        formdata.append('address_id', $(this).data('addressid'));
+        let btn = $(this);
+        $.ajax({
+            url: "path('user.address.delete')",
+            data: formdata ,
+            type: "POST",
+            processData: false,
+            contentType: false,
+            dataType: 'text',
+            success: function (data) {
+                btn.parent().parent().remove();
+            },
+            error: function(){
+                alert('خطایی رخ داد');
+            }
+        });
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

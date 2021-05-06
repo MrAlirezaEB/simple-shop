@@ -35,7 +35,7 @@ class Order
     /**
      * @ORM\Column(type="integer")
      */
-    private $price;
+    private $price=0;
 
     /**
      * @ORM\OneToMany(targetEntity=ShoppingList::class, mappedBy="ordr")
@@ -138,5 +138,21 @@ class Order
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * this static method calculates total price of products in shopping list
+     *
+     * @param array $shoppingLists
+     * @return integer
+     */
+    public static function calculatePrice(Collection $shoppingLists) : int
+    {
+        $total = 0;
+        foreach ($shoppingLists as $item) {
+            $total += $item->getProduct()->getPrice();
+        }
+
+        return $total;
     }
 }

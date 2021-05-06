@@ -9,7 +9,7 @@ class TwigGlobal
     private $settings;
 
     public function __construct(SettingRepository $settingRepository) {
-        $this->settings = $settingRepository->find(1);
+        $this->settings = $settingRepository->findAll()[0];
     }
     
     /**

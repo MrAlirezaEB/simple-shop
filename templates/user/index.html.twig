@@ -1,0 +1,124 @@
+{% extends "user/base.html.twig" %}
+
+
+{% block panel_content %}
+    <div class="row">
+    <div class="col-lg-4 panel-item pl-lg-2 pr-lg-2">
+        <a href="{{path('user.orders', {pending: true} )}}" class="panel-box">
+            <div class="front-box">
+                <div class="front-icon">
+                    <svg>
+                        <use xlink:href="{{asset('images/16box.svg#box')}}"></use>
+                    </svg>
+                    <span>درحال انجام</span>
+                </div>
+                <div class="number-box">
+                    {{order_count.pending}}
+                </div>
+            </div>
+            <div class="bg-back">
+
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4 panel-item pl-lg-2 pr-lg-2">
+        <a href="{{path('user.orders', {failed:true} )}}" class="panel-box">
+            <div class="front-box">
+                <div class="front-icon">
+                    <svg>
+                        <use xlink:href="{{asset('images/2payment.svg#payment')}}"></use>
+                    </svg>
+                    <span>رد شده</span>
+                </div>
+                <div class="number-box">
+                    0
+                </div>
+            </div>
+            <div class="bg-back">
+
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-4 panel-item pl-lg-2 pr-lg-2">
+        <a href="{{path('user.orders',{completed:true})}}" class="panel-box">
+            <div class="front-box">
+                <div class="front-icon">
+                    <svg>
+                        <use xlink:href="{{asset('images/16tik-box.svg#tik-box')}}"></use>
+                    </svg>
+                    <span>انجام شده</span>
+                </div>
+                <div class="number-box">
+                    0
+                </div>
+            </div>
+            <div class="bg-back">
+
+            </div>
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12 pl-lg-2 pr-lg-2">
+        <div class="last-order">
+            <a href="#" class="order-link">
+                آخرین سفارشات
+            </a>
+            <a href="{{path('user.orders')}}" class="tooltip-order">
+                کل سفارش
+            </a>
+        </div>
+        {% for item in orders %}
+            <div class="order">
+            <div class="order-top">
+                <span>سفارش {{ item.id | hashids_encode }}#</span>
+                <span>مبلغ پرداختی : {{item.price}} تومان</span>
+            </div>
+            <div class="order-item">
+                <div class="row">
+                {% for shopping in item.getShoppingLists() %}
+                    <div class="col-xl-6 col-md-12">
+                        <div class="order-content">
+                            <div class="order-img">
+                                <img src="{{asset(shopping.getProduct().getImage())}}">
+                            </div>
+                            <div class="order-text">
+                                <div class="order-list">
+                                    <span>مبلغ پرداختی : </span>
+                                    <span> {{shopping.getProduct().getPrice()}} تومان</span>
+                                </div>
+                                <div class="order-list">
+                                    <span>نام : </span>
+                                    <span>  {{shopping.getProduct().getTitle()}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+            <div class="info-receiver">
+                <div class="person-receiver">
+                    <div class="rec">
+                        <span>گیرنده : </span>
+                        <span>{{app.user.getFullName()}} </span>
+                    </div>
+                    <div class="rec">
+                        <span>آدرس : </span>
+                        <span>{{item.getAddress().getCity()}} ، {{item.getAddress().getAddress()}} </span>
+                    </div>
+                    <div class="rec">
+                        <span>شماره تماس : </span>
+                        <span>{{app.user.getMobile()}}</span>
+                    </div>
+                    <div class="rec date-receive">
+                        <span>تاریخ سفارش : </span>
+                        <span>{{item.getCreatedAt().format('Y-m-d')}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

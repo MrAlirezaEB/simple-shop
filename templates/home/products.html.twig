@@ -1,0 +1,91 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <main class="category">
+    <div class="container">
+        <section class="product">
+            <div class="head-section flex justify-content-between">
+                <h3>{{title}}</h3>
+                <div class="filter-btn">
+                    <a {% if app.request.query.get('orderBy') == 'createdAt' %}
+                        {% if app.request.query.get('order') == 'ASC' %}
+                        href='?orderBy=createdAt'
+                        {% else %}
+                        href='?orderBy=createdAt&order=ASC'
+                        {% endif %}
+                        class="active {% if app.request.query.get('order') == 'ASC' %}up{% else %}down{% endif %}"
+                     {% else %} href='?orderBy=createdAt' {% endif %}>جدیدترین</a>
+                    <a {% if app.request.query.get('orderBy') == 'views' %}
+                        {% if app.request.query.get('order') == 'ASC' %}
+                        href='?orderBy=views'
+                        {% else %}
+                        href='?orderBy=views&order=ASC'
+                        {% endif %}
+                        class="active {% if app.request.query.get('order') == 'ASC' %}up{% else %}down{% endif %}"
+                     {% else %} href='?orderBy=views' {% endif %}>پر بازدیدترین</a>
+                    <a {% if app.request.query.get('orderBy') == 'price' %}
+                        {% if app.request.query.get('order') == 'ASC' %}
+                        href='?orderBy=price'
+                        {% else %}
+                        href='?orderBy=price&order=ASC'
+                        {% endif %}
+                        class="active {% if app.request.query.get('order') == 'ASC' %}up{% else %}down{% endif %}"
+                     {% else %} href='?orderBy=price' {% endif %}}>گرانترین</a>
+                </div>
+            </div>
+            <div class="production pl-lg-3">
+                    <div class="row">
+                    {% for item in products %}
+                    <div class="col-xl-3 col-md-6 col-sm-12 pl-0 mb-lg-3">
+                        <div class="product-box">
+                            <figure>
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}"><img src="{{ asset(item.image) }}"></a>
+                            </figure>
+                            <div class="pro-detail text-center">
+                                <a href="{{ path('product.single' , {product: item.id | hashids_encode , name:item.title }) }}">{{item.title}}</a>
+                                <div class="pro-info flex">
+                                    <span>شروع از 1 عدد</span>
+                                    /
+                                    <span>2 تا 10 روز کاری</span>
+                                </div>
+                                <div class="pro-button flex">
+                                    <span><span style="color:#e85d48; font-size: 1rem;margin: 0 2px; ">{{item.price}}</span>  تومان</span>
+                                    <a href="{{ path('order.addToCart' , { product : item.id | hashids_encode}) }}" style="background-color: #4d97ff"> اضافه به سبد
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17shopping-bag.svg#shop-bag')}}"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %} 
+                </div>
+                   <ul class='kai-pagination'>
+                   <li class="pagination-item is-prev">
+                        <a {% if links.currentPage > 1 %}
+                           href="{{path('products' , app.request.query.all|merge({ page: links.currentPage - 1}) )}}"
+                       {% endif %}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>    
+                        </a>
+                    </li>
+                   {% for i in 1..links.maxPages %}
+                       <li class="pagination-item {% if i==links.currentPage %}
+                           is-active
+                       {% endif %}"><a href="{{path('products' , app.request.query.all|merge({page: i}) )}}">{{i}}</a></li>
+                   {% endfor %}
+                    <li class="pagination-item is-next">
+                        <a <a {% if links.maxPages > links.currentPage %}
+                           href="{{path('products' , app.request.query.all|merge({ page: links.currentPage + 1}) )}}"
+                       {% endif %}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </a>
+                    </li>
+                   </ul>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}
+
+

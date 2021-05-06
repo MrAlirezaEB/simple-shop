@@ -1,0 +1,115 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+<main class="unit4">
+    <div class="page-name container-fluid">
+        <div class="container">
+            <ul class="flex">
+                <li><a href="{{ path('home')}}">صحفه اصلی</a></li>
+                <li><a href="{{ path('products') }}">محصولات</a></li>
+                <li><a href="#">{{product.getTitle()}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="steps">
+            <div class="line-dashed"></div>
+            <div class="step-item grid">
+                <div class="stp-box flex active-step">
+                    <!-- line-d display none , there is for responsive -->
+                    <div class="line-d"></div>
+                    <a href="#" class="content-step flex flex-column">
+                        <svg><use xlink:href="{{asset('images/10s-package.svg#package')}}"></use></svg>
+                        <div class="circle">
+                            <div class="circle-front">
+                            </div>
+                            <div class="circle-back">
+                                <div class="arrow-bottom-back"></div>
+                            </div>
+                        </div>
+                        <span> انتخاب محصول</span>
+                    </a>
+                </div>
+                <div class="stp-box flex">
+                    <div class="line-d"></div>
+                    <a href="#" class="content-step flex flex-column">
+                        <svg><use xlink:href="{{asset('images/10s-box.svg#box')}}"></use></svg>
+                        <div class="circle">
+                            <div class="circle-front">
+                            </div>
+                            <div class="circle-back">
+                                <div class="arrow-bottom-back"></div>
+                            </div>
+                        </div>
+                        <span>تکمیل سفارش</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="widget-shop">
+            <div class="single-shop">
+                <div class="row">
+                    <div class="col-lg-8 col-md-12">
+                        <div class="single-post pl-3">
+                            <div class="head-post">
+                                <h4>{{product.getTitle()}}</h4>
+                            </div>
+                            <div class="select-product">
+                                <div class="row">
+                                    <div class="col-lg-7 col-md-6">
+                                        <div class="product-image flex flex-column">
+                                            <div class="big-image-for">
+                                                <a href="javascript:void(0);"><img id="myimage" src="{{asset(product.getImage())}}"></a>
+                                            </div>
+                                            <div class="lit-image-nav flex">
+                                                <a href="javascript:void(0);"><img class="image-collection" src="{{asset(product.getImage())}}"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-md-6">
+                                            <div class="product-info">
+
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 pl-3">
+                        <div class="hold-factor">
+                            <div class="single-factor">
+                                <section id='price_prev'>
+                                    <div class="total-factor flex" style='position:none;'>
+                                        <h5>قیمت:</h5>
+                                        <span>{{product.getPrice()}}</span>
+                                    </div>
+                                </section>
+                                <div class="next-factor">
+                                    <a {% if not is_granted('IS_AUTHENTICATED_FULLY') %} href='#' class="continue disabled" data-toggle="modal" data-target=".bd-login-modal-lg" {% else %} href="{{ path('order.addToCart' , { product : product.id | hashids_encode}) }}" class="continue" {% endif %} >
+                                        اضافه به سبد خرید
+                                        <svg><use xlink:href="{{asset('images/1supermarket.svg#supermarket')}}"></use></svg>
+                                    </a>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extrajs %}
+    <script src="{{asset('js/magnify.js')}}"></script>
+    <script>
+    $('.image-collection').click(function(){
+        $('#myimage').attr('src',$(this).attr('src'));
+        $('.img-magnifier-glass').remove();
+        magnify("myimage", 1.5);   
+    });
+
+</script>
+{% endblock %}

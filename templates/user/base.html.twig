@@ -1,0 +1,90 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+    <main class="panel">
+    <div class="page-name container-fluid">
+        <div class="container">
+            <ul class="flex">
+                <li><a href="{{path('home')}}">صحفه اصلی</a></li>
+                <li><a href="{{path('user.dashboard')}}">پروفایل</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="panel-page">
+            <div class="row">
+                <div class="col-lg-3 panel-color col-md-4 col-sm-12">
+                    <div class="panel-name">
+                        <div class="user-p flex align-items-center">
+                            <div class="user-pic">
+                                <img src="{{asset('images/person.png')}}">
+                            </div>
+                            <div class="username">
+                                <span>  {{app.user.getFullName()}}</span>
+                            </div>
+                        </div>
+                        <div class="panel-list">
+                            <ul>
+                                <li>
+                                    <a href="{{path('user.dashboard')}}" {% if app.request.get('_route') == 'user.dashboard' %}
+                                        class='active'
+                                    {% endif %}>
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17user.svg#user')}}"></use>
+                                        </svg>
+                                        پنل کاربری
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('user.orders')}}" {% if app.request.get('_route') == 'user.orders' %}
+                                        class='active'
+                                    {% endif %}}>
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17shopping-bag.svg#shop-bag')}}"></use>
+                                        </svg>
+                                        سفارشات
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('user.addresses')}}" {% if app.request.get('_route') == 'user.addresses' %}
+                                        class='active'
+                                    {% endif %}>
+                                        <svg>
+                                            <use xlink:href="{{asset('images/6pin.svg#pin')}}"></use>
+                                        </svg>
+                                        آدرس ها </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('user.info')}}" {% if app.request.get('_route') == 'user.info' %}
+                                        class='active'
+                                    {% endif %}>
+                                        <svg>
+                                            <use xlink:href="{{asset('images/15more.svg#more')}}"></use>
+                                        </svg>
+                                        اطلاعات کاربری </a>
+                                </li>
+                                <li>
+                                    <a href="{{path('app_logout')}}">
+                                        <svg>
+                                            <use xlink:href="{{asset('images/17logout.svg#logout')}}"></use>
+                                        </svg>
+                                        خارج شدن</a>
+
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9 pr-md-0 col-md-8 col-sm-12 pl-0 pr-0 pl-md-3 pr-md-0">
+                    <div class="panel-content">
+                        {% block panel_content %}
+                            
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

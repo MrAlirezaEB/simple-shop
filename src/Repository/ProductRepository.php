@@ -5,6 +5,8 @@ namespace App\Repository;
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +16,61 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $requestStack; // will be used for getting request data for pagination
+
+    public function __construct(ManagerRegistry $registry , RequestStack $requestStack)
     {
         parent::__construct($registry, Product::class);
+        $this->requestStack = $requestStack;
     }
+
+    public function getAllProducts( $limit = 20 , $currentPage = 1 , $orderBy = 'createdAt' , $order = 'DESC')
+    {
+        // check request for valid data
+        $request = $this->requestStack->getCurrentRequest();
+        $currentPage = $request->query->get('page') ? : $currentPage; //check for page parameter
+        $orderBy = $request->query->get('orderBy') ? : $orderBy;
+        $order = $request->query->get('order') ? : $order;
+
+        // creating query
+        $query = $this->createQueryBuilder('p')
+            ->orderBy("p.$orderBy", $order)
+            ->getQuery();
+
+        $paginator = $this->paginate($query, $currentPage , $limit);
+
+        return $paginator;
+    }
+
+    private function paginate($dql, $page = 1, $limit)
+    {
+        $paginator = new Paginator($dql);
+
+        $paginator->getQuery()
+            ->setFirstResult($limit * ($page - 1)) // offset
+            ->setMaxResults($limit); // limit
+        // paginator meta data for making links
+        $paginator->links = [
+            'limit'=>$limit,
+            'maxPages'=> ceil($paginator->count() / $limit),
+            'currentPage' => $page
+        ];
+        return $paginator;
+    }
+
+    public function search($value)
+    {
+        $query =  $this->createQueryBuilder('p');
+        $query->where($query->expr()->like('p.title', ':val'))
+            ->setParameter('val', "%".$value."%")
+            ->orderBy('p.id', 'DESC')
+            ->getQuery();
+        $paginator = $this->paginate($query, 1 , 12);
+
+        return $paginator;
+    }
+
+
 
     // /**
     //  * @return Product[] Returns an array of Product objects

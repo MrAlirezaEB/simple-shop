@@ -22,7 +22,7 @@ class ProductFixture extends Fixture
         {
             $product = new Product();
             $product->setTitle($this->faker->word());
-            $product->setImage($this->faker->imageUrl('1080', '720', 'food'));
+            $product->setImage('/images/extra/'.rand(1,13).'.jpg');
             $product->setPrice(rand(1,99)*1000);
             $manager->persist($product);
         }
